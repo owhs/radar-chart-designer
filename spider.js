@@ -1,5 +1,3 @@
-// modified chatgpt output
-
 const spider = document.getElementById('spider');
 const titleInput = document.getElementById('title');
 const labelsInput = document.getElementById('values');
@@ -50,7 +48,7 @@ const drawSpiderDiagram = () => {
   spider.innerHTML = '';
   
   var style = document.createElementNS('http://www.w3.org/2000/svg', 'style');
-  style.innerHTML = "text{font-family:sans-serif;"+(textShadow>0?"filter:drop-shadow(0 0 "+textShadow+"px #000)":"")+"}";
+  style.innerHTML = "text{user-select:none;font-family:sans-serif;"+(textShadow>0?"filter:drop-shadow(0 0 "+textShadow+"px #000)":"")+"}";
   spider.appendChild(style);
   
   if (textShadow>0){
@@ -66,6 +64,19 @@ const drawSpiderDiagram = () => {
   // Calculate the angle between each label
   const angleStep = 2 * Math.PI / labels.length;
    
+   
+  for (var i=0;i<maxValue;i++){
+	  var outerPerimeter = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+	  outerPerimeter.setAttribute('cx', center.x);
+	  outerPerimeter.setAttribute('cy', center.y);
+	  outerPerimeter.setAttribute('r', ((radius/maxValue)*(maxValue-i)));
+	  outerPerimeter.setAttribute('fill', 'none');
+	  outerPerimeter.setAttribute('opacity', '.3');
+	  if (i==0)  outerPerimeter.setAttribute('fill', fill);
+	  outerPerimeter.setAttribute('stroke-width', '.5');
+	  outerPerimeter.setAttribute('stroke', strokeColor);
+	  spider.appendChild(outerPerimeter);
+  }
   
   
   // Draw the outerpoly
@@ -73,12 +84,14 @@ const drawSpiderDiagram = () => {
   outerpoly.setAttribute('fill', fill);
   outerpoly.setAttribute('stroke', stroke);
   outerpoly.setAttribute('opacity', ".5");
-  outerpoly.setAttribute('stroke-width', '2');
-  spider.appendChild(outerpoly);
+  outerpoly.setAttribute('stroke-width', '2');	
+  //spider.appendChild(outerpoly);
+  
+  
   let outerpolyPoints = '';
   for (let i = 0; i < labels.length; i++) {
     const angle = angleStep * i - Math.PI / 2;
-    const distance = (maxValue - minValue) / (maxValue - minValue) * radius;
+    const distance = ((maxValue - minValue) / (maxValue - minValue) * (radius + 10));
     const point = {
       x: center.x + distance * Math.cos(angle),
       y: center.y + distance * Math.sin(angle),
@@ -100,19 +113,21 @@ const drawSpiderDiagram = () => {
   const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
   polygon.setAttribute('fill', fill);
   polygon.setAttribute('stroke', stroke);
-  polygon.setAttribute('stroke-width', '2');
+  polygon.setAttribute('stroke-width', '1');
+  polygon.setAttribute('opacity', ".7");
   spider.appendChild(polygon);
   let polygonPoints = '';
+  const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  
   for (let i = 0; i < labels.length; i++) {
     const angle = angleStep * i - Math.PI / 2;
     const value = values[labels[i]];//parseFloat(prompt(`Enter value for ${labels[i]}:`));
 	
-    const distance = (value - minValue) / (maxValue - minValue) * (radius - 20);
-    const point = {
+    var distance = (value - minValue) / (maxValue - minValue) * (((radius/maxValue)*(maxValue-1)));
+    var point = {
       x: center.x + distance * Math.cos(angle),
       y: center.y + distance * Math.sin(angle),
     };
-    polygonPoints += `${point.x},${point.y} `;
     const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
     label.setAttribute('x', point.x);
     label.setAttribute('y', point.y);
@@ -120,14 +135,21 @@ const drawSpiderDiagram = () => {
     label.setAttribute('text-anchor', 'middle');
     label.setAttribute('dominant-baseline', 'middle');
     label.textContent = value;
-    spider.appendChild(label);
+    group.appendChild(label);
+	distance = (value - minValue) / (maxValue - minValue) * (radius);
+    point = {
+      x: center.x + distance * Math.cos(angle),
+      y: center.y + distance * Math.sin(angle),
+    };
+    polygonPoints += `${point.x},${point.y} `;
   }
+  spider.appendChild(group);
   polygon.setAttribute('points', polygonPoints);
   
   // Draw the title
   const titleElem = document.createElementNS('http://www.w3.org/2000/svg', 'text');
   titleElem.setAttribute('x', center.x);
-  titleElem.setAttribute('y', center.y - radius - 20);
+  titleElem.setAttribute('y', center.y - radius - 35);
   titleElem.setAttribute('fill', textColor);
   titleElem.setAttribute('text-anchor', 'middle');
   titleElem.setAttribute('dominant-baseline', 'middle');
