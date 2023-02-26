@@ -34,7 +34,7 @@ const drawSpiderDiagram = () => {
   
   const title = titleInput.value;
   const values = JSON.parse(labelsInput.value);
-  const labels = Object.keys(values);//labelsInput.value.split(',');
+  const labels = values.map(z=>z[0]);//labelsInput.value.split(',');
   const minValue = parseFloat(minValueInput.value);
   const maxValue = parseFloat(maxValueInput.value);
   const fill = fillColorInput.value;
@@ -48,16 +48,17 @@ const drawSpiderDiagram = () => {
   spider.innerHTML = '';
   
   var style = document.createElementNS('http://www.w3.org/2000/svg', 'style');
-  style.innerHTML = "text{user-select:none;font-family:sans-serif;"+(textShadow>0?"filter:drop-shadow(0 0 "+textShadow+"px #000)":"")+"}";
+  style.innerHTML = "text{user-select:none;text-anchor:middle;dominant-baseline:middle;font-family:sans-serif;fill:"+textColorInput.value+";"+(textShadow>0?"filter:drop-shadow(0 0 "+textShadow+"px #000);text-shadow:0 0 2px #000;":"")+"}"
+					+"circle{opacity:.3;stroke-width:.5;fill:none;stroke:"+strokeColor+"}circle:first-of-type{fill:"+fill+"}#values>g>circle{opacity:0.7;fill:"+textColorInput.value+";stroke-width:1}"
+					+"polygon{stroke-width:1px;opacity:.7;fill:"+fill+";stroke:"+stroke+"}"
+					+"#values>g>*{cursor:pointer;transition:fill.4s}#values>g:hover>*{fill:"+strokeColor+"}";
   spider.appendChild(style);
   
   if (textShadow>0){
   }	  
   // Calculate the radius of the spider diagram
   const radius = (Math.min(spider.clientWidth, spider.clientHeight) / 2) - 50;
-  
-  console.log(radius);
-  
+    
   // Calculate the center of the spider diagram
   const center = { x: spider.clientWidth / 2, y: spider.clientHeight / 2 };
   
@@ -65,28 +66,23 @@ const drawSpiderDiagram = () => {
   const angleStep = 2 * Math.PI / labels.length;
    
    
+  
+  var group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  group.id="rings";
   for (var i=0;i<maxValue;i++){
 	  var outerPerimeter = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
 	  outerPerimeter.setAttribute('cx', center.x);
 	  outerPerimeter.setAttribute('cy', center.y);
 	  outerPerimeter.setAttribute('r', ((radius/maxValue)*(maxValue-i)));
-	  outerPerimeter.setAttribute('fill', 'none');
-	  outerPerimeter.setAttribute('opacity', '.3');
-	  if (i==0)  outerPerimeter.setAttribute('fill', fill);
-	  outerPerimeter.setAttribute('stroke-width', '.5');
-	  outerPerimeter.setAttribute('stroke', strokeColor);
-	  spider.appendChild(outerPerimeter);
+	  group.appendChild(outerPerimeter);
   }
+  spider.appendChild(group);
   
   
-  // Draw the outerpoly
+  /*
   const outerpoly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
-  outerpoly.setAttribute('fill', fill);
-  outerpoly.setAttribute('stroke', stroke);
-  outerpoly.setAttribute('opacity', ".5");
-  outerpoly.setAttribute('stroke-width', '2');	
-  //spider.appendChild(outerpoly);
-  
+  group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  group.id="labels";
   
   let outerpolyPoints = '';
   for (let i = 0; i < labels.length; i++) {
@@ -100,47 +96,67 @@ const drawSpiderDiagram = () => {
     const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
     label.setAttribute('x', point.x);
     label.setAttribute('y', point.y);
-    label.setAttribute('text-anchor', 'middle');
-    label.setAttribute('fill', textColor);
-    label.setAttribute('dominant-baseline', 'middle');
     label.textContent = labels[i];
-    spider.appendChild(label);
+    group.appendChild(label);
   }
+  spider.appendChild(group);
   outerpoly.setAttribute('points', outerpolyPoints);
+  */
   
   
   // Draw the polygon
   const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
-  polygon.setAttribute('fill', fill);
-  polygon.setAttribute('stroke', stroke);
-  polygon.setAttribute('stroke-width', '1');
-  polygon.setAttribute('opacity', ".7");
+  //polygon.setAttribute('fill', fill);
+  //polygon.setAttribute('stroke', stroke);
+  //polygon.setAttribute('stroke-width', '1');
+  //polygon.setAttribute('opacity', ".7");
   spider.appendChild(polygon);
   let polygonPoints = '';
-  const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  group.id="values";
   
   for (let i = 0; i < labels.length; i++) {
+	var gr = document.createElementNS('http://www.w3.org/2000/svg', 'g');
     const angle = angleStep * i - Math.PI / 2;
-    const value = values[labels[i]];//parseFloat(prompt(`Enter value for ${labels[i]}:`));
+    const value = values[i][1];//parseFloat(prompt(`Enter value for ${labels[i]}:`));
 	
-    var distance = (value - minValue) / (maxValue - minValue) * (((radius/maxValue)*(maxValue-1)));
+    var distance = (radius + 10);
     var point = {
       x: center.x + distance * Math.cos(angle),
       y: center.y + distance * Math.sin(angle),
     };
-    const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+
+	
+	var val = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    val.setAttribute('x', point.x);
+    val.setAttribute('y', point.y);
+    val.textContent = values[i][0];
+	
+	
+    distance = (value - minValue) / (maxValue - minValue) * (((radius/maxValue)*(maxValue-2)));
+    point = {
+      x: center.x + distance * Math.cos(angle),
+      y: center.y + distance * Math.sin(angle),
+    };
+	
+    var label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
     label.setAttribute('x', point.x);
     label.setAttribute('y', point.y);
-    label.setAttribute('fill', textColor);
-    label.setAttribute('text-anchor', 'middle');
-    label.setAttribute('dominant-baseline', 'middle');
+    //label.setAttribute('fill', textColor);
     label.textContent = value;
-    group.appendChild(label);
 	distance = (value - minValue) / (maxValue - minValue) * (radius);
     point = {
       x: center.x + distance * Math.cos(angle),
       y: center.y + distance * Math.sin(angle),
     };
+	var pin = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+	pin.setAttribute('cx', point.x);
+	pin.setAttribute('cy', point.y);
+	pin.setAttribute('r', 5);
+	gr.appendChild(pin);
+    gr.appendChild(label);
+    gr.appendChild(val);
+	group.appendChild(gr);
     polygonPoints += `${point.x},${point.y} `;
   }
   spider.appendChild(group);
