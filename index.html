@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Spider Diagram Designer</title>
+    <link href="style.css" rel="stylesheet">
+  </head>
+  <body>
+  <div class="flex">
+	<aside>
+		<div label="Diagram Title">
+		  <div class="flex">
+		  <label for="title">Title:</label>
+		  <input type="text" id="title" />
+		  </div>
+		</div>
+		<div label="Diagram Boundries">
+		  <div class="flex">
+			<label for="minValue">Min:</label>
+			<input type="number" id="minValue" value="0" />
+		  </div>
+		  <div class="flex">
+			  <label for="maxValue">Max:</label>
+			  <input type="number" id="maxValue" value="10" />
+		  </div>
+		</div>
+		<div label="Diagram Data">
+		  <div class="flex">
+			  <label for="values">Values:</label>
+			  <input type="text" id="values" />
+		  </div>
+		</div>
+		<div label="Diagram Colours">
+		  <div class="flex">
+		  <label for="fillColor">Fill Colour:</label>
+		  <input type="color" id="fillColor" value="#02b116" />
+		  </div>
+		  <div class="flex">
+		  <label for="strokeColor">Stroke Colour:</label>
+		  <input type="color" id="strokeColor" value="#70d77c" />
+		  </div>
+		</div>
+		<div label="Label Colours">
+		  <div class="flex">
+		  <label for="textColor">Text Colour:</label>
+		  <input type="color" id="textColor" value="#000" />
+		  </div>
+		  <div class="flex">
+		  <label for="textShadow">Shadow Size:</label>
+		  <input type="number" id="textShadow" value="1" />
+		  </div>
+		</div>
+		<div label="Export Settings">
+		  <div class="flex">
+		  <label for="retinaScale">Retina Scale:</label>
+		  <input type="number" id="retinaScale" value="4" max="10" min="1" />
+		  </div>
+		  <center>
+		  <button id="saveBtn">Save SVG</button>
+		  <button id="savePNGBtn">Save PNG</button>
+		</div>
+		<div>
+		  <button id="resetBtn">Reset</button>
+		</div>
+	</aside>
+	<main>
+		<svg id="spider"></svg>
+	</main>
+  </div>
+    <script src="spider.js"></script>
+  </body>
+</html>
