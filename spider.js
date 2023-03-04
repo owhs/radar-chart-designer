@@ -57,6 +57,7 @@ const savePNGBtn = document.getElementById('savePNGBtn');
 
 const saveSpidBtn = document.getElementById('saveSpidBtn');
 const openSpidBtn = document.getElementById('openSpidBtn');
+const openEGBtn = document.getElementById('openEGBtn');
 
 const fillColorInput = document.getElementById('fillColor');
 const strokeColorInput = document.getElementById('strokeColor');
@@ -338,7 +339,9 @@ savePNGBtn.addEventListener('click', downloadSVGAsPNG);
 saveSpidBtn.addEventListener('click', ()=>{
 	download((title||titleInput.value||"spider-diagram")+'.spd',hex());
 });
-
+openEGBtn.addEventListener('click', ()=>{
+	if (confirm("Are you sure? You will lose any progress!")){load('H4sIAB5kA2QAA62TURLCIAxErxRBUK+jvf8Z3IftTKS0hU4/MiEhLyxkMEtvsxDMcjJ7POVvsklrk//88uwHrfHUF5vjUgMz9yCOipd9uKi+ST1ZH7Kc4dk4wFLrWV2im71XrPLdLLWefQ2waDx7Lu/q2TzAorFxbuHdvPWk/7H61LmgBPmMlyZmyCzouaoT27K6LusuLau17HG87Vb/Xh1X6S1al78xfQHEA72OeAMAAA==');parseData()}
+});
 openSpidBtn.addEventListener('click', ()=>{
 	var input = document.createElement('input');
 	input.type = 'file';
@@ -361,7 +364,7 @@ var tit = document.querySelector("#titlebar");
 tit.onclick=e=>{
 	e.preventDefault();
     var t = e.target, txt = t.innerText, a=document.querySelector("div>aside");
-	if (t.matches(".logo") && confirm("are you sure? you will lose everything?")) location.search="";
+	if (t.matches(".logo") && confirm("Are you sure? You will lose any progress!")) location.search="";
 	if (!t.matches("a")||!txt) return;
     tit.querySelector("#titlebar .active").classList.remove("active");
     t.classList.add("active");
