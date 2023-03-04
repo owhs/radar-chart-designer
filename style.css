@@ -6,9 +6,10 @@ font-family:sans-serif
 body {
     display: flex;
     flex-direction: column;
+    /* overflow: hidden; */
 }
 button,a{cursor:pointer}
-aside {min-width:300px;width:300px;background:#eee;padding:5px;border-right: 1px solid #ddd;position: relative;}
+aside {min-width:300px;width:300px;background:#eee;padding:5px;border-right: 1px solid #ddd;position: relative;/* max-height: 99%; *//* height: 100%; */overflow: hidden;/* display: flex; */flex-direction: column;}
 
 main {
 width:100%;
@@ -27,10 +28,7 @@ input {
 margin:5px
 }
 
-.flex {
-display:flex;
-height:100%
-}
+.flex {display:flex;height: calc(100% - 41px);}
 
 aside .flex>* {
 width:100%;
@@ -39,19 +37,11 @@ white-space:nowrap;
 overflow:hidden
 }
 
-aside>div[label] {border:1px solid #0002;padding:5px 2px;margin:5px 0;border-radius:3px;background:#fff8;display: none;user-select:none;position: relative;}
+aside>div[label] {border:1px solid #0002;padding:5px 2px;margin:5px 0;border-radius:3px;background:#fff8;display: none;user-select:none;position: relative;overflow: auto;max-height: 450px;padding-top: 15px;}
 
 aside .flex>label {line-height:31.5px;text-align:right;padding-right:5px;/* max-width:105px; */font-variant-caps:all-small-caps;font-size:14px}
 
-aside>div[label]:before {
-content:attr(label);
-font-size:12px;
-font-variant-caps:all-small-caps;
-color:#888;
-text-align:center;
-display:block;
-border-bottom:1px solid #e5e5e5
-}
+aside>div[label]:before {content:attr(label);font-size:12px;font-variant-caps:all-small-caps;color:#888;text-align:center;display:block;border-bottom:1px solid #e5e5e5;position: sticky;top: -15px;/* position: fixed; */padding: 2px;margin-top: -15px;background: #f7f7f7;}
 
 input#values,label[for=values] {
 cursor:pointer
@@ -154,9 +144,11 @@ aside .table>div input:focus {
 }
 
 aside div>a.add {
-    position: absolute;
-    top: 2px;
+    position: sticky;
+    top: -13px;
     right: 2px;
+    float: right;
+    margin-top: -17px;
     padding: 0 3px;
     text-decoration: none;
     line-height: 15px;
@@ -254,8 +246,12 @@ aside:after {
     color: #000;
     opacity: .6;
     pointer-events: none;
+	transition: opacity .3s
 }
 
+aside:hover:after {
+    opacity: 0;
+}
 
 .flex>aside .flex>input:not(:only-child) {
     max-width: 100px;
