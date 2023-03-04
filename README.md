@@ -1,17 +1,28 @@
 # Radar Chart Designer
 
-A No-Signin, No-Cookie Tool to easily create, edit, save and export (SVG & PNG) - HQ Radar Charts / Spider Diagrams
+----
 
-Preview: https://owhs.uk/RCD/
+A No-Signin, No-Cookie Tool -
 
-![exported svg](https://github.com/owhs/radar-chart-designer/raw/main/example.svg?raw=true)
+Designed to easily create, edit, save and export (SVG & PNG) - HQ Radar Charts / Spider Diagrams
 
+----
 
+#### Preview: https://owhs.uk/RCD/
 
+#### Screenshot:
+![Screenshot](https://github.com/owhs/radar-chart-designer/raw/main/chrome_2SmOqN5FLt.png?raw=true)
 
+#### Example exported svg:
+![Exported SVG](https://github.com/owhs/radar-chart-designer/raw/main/example.svg?raw=true)
 
+~
 
+~
 
+~
+
+~
 
 
 
