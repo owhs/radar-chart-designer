@@ -22,16 +22,16 @@
 		</div>
 		<div label="Diagram Boundries" class="diagram">
 		  <div class="flex">
-			<label for="minValue">Min:</label>
+			<label for="minValue" title="Minimum bound shown on diagram">Min:</label>
 			<input type="number" id="minValue" value="0"  min="0"/>
 		  </div>
 		  <div class="flex">
-			  <label for="maxValue">Max:</label>
+			  <label for="maxValue" title="Maximum bound shown on diagram">Max:</label>
 			  <input type="number" id="maxValue" value="10" min="10"/>
 		  </div>
 		</div>
 		<div label="Diagram Data" class="diagram">
-		  <a class="add" accesskey="a">+</a>
+		  <a class="add" accesskey="a" title="Add label to chart">+</a>
 		  <input type="hidden" id="values" />
 		  <div class="table" id="data">
 		  
@@ -88,7 +88,7 @@
 		</div>		
 		<div label="URL Share" class="file">
 			<div class="flex">
-		  <label for="shareMode">Live URL:</label>
+		  <label for="shareMode" title="Automatically saves diagram data in the URL, allowing sharing by link">Live URL:</label>
 		  <input type="checkbox" id="shareMode" checked onchange="drawSpiderDiagram()" />
 		  </div>
 		</div>		
