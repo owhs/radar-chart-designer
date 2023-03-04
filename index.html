@@ -3,33 +3,42 @@
   <head>
     <title>Spider Diagram Designer</title>
     <link href="style.css" rel="stylesheet">
+	<link rel="shortcut icon" href="favicon.ico" /> 
+	<script src="https://unpkg.com/fflate"></script>
   </head>
   <body>
+  <nav id="titlebar">
+    <a href="#" class="logo"></a>
+    <a href="#" class="active">diagram</a>
+    <a href="#">theme</a>
+    <a href="#">view</a>
+    <a href="#">export</a>
+  </nav>
   <div class="flex">
-	<aside>
-		<div label="Diagram Title">
+	<aside v="diagram">
+		<div label="Diagram Title" class="diagram">
 		  <div class="flex">
-		  <label for="title">Title:</label>
-		  <input type="text" id="title" />
+		  <input type="text" id="title" placeholder="title"/>
 		  </div>
 		</div>
-		<div label="Diagram Boundries">
+		<div label="Diagram Boundries" class="diagram">
 		  <div class="flex">
 			<label for="minValue">Min:</label>
-			<input type="number" id="minValue" value="0" />
+			<input type="number" id="minValue" value="0"  min="0"/>
 		  </div>
 		  <div class="flex">
 			  <label for="maxValue">Max:</label>
-			  <input type="number" id="maxValue" value="10" />
+			  <input type="number" id="maxValue" value="10" min="10"/>
 		  </div>
 		</div>
-		<div label="Diagram Data">
-		  <div class="flex">
-			  <label for="values">Values:</label>
-			  <input type="text" id="values" />
+		<div label="Diagram Data" class="diagram">
+		  <a href="#" class="add">+</a>
+		  <input type="hidden" id="values" />
+		  <div class="table" id="data">
+		  
 		  </div>
 		</div>
-		<div label="Diagram Colours">
+		<div label="Diagram Colours" class="theme">
 		  <div class="flex">
 		  <label for="fillColor">Fill Colour:</label>
 		  <input type="color" id="fillColor" value="#02b116" />
@@ -39,7 +48,7 @@
 		  <input type="color" id="strokeColor" value="#70d77c" />
 		  </div>
 		</div>
-		<div label="Label Colours">
+		<div label="Label Colours" class="theme">
 		  <div class="flex">
 		  <label for="textColor">Text Colour:</label>
 		  <input type="color" id="textColor" value="#000" />
@@ -49,7 +58,7 @@
 		  <input type="number" id="textShadow" value="1" />
 		  </div>
 		</div>
-		<div label="Export Settings">
+		<div label="Export Settings" class="export">
 		  <div class="flex">
 		  <label for="retinaScale">Retina Scale:</label>
 		  <input type="number" id="retinaScale" value="4" max="8" min="1" />
@@ -58,9 +67,9 @@
 		  <button id="saveBtn">Save SVG</button>
 		  <button id="savePNGBtn">Save PNG</button>
 		</div>
-		<div>
+		<!--<div>
 		  <button id="resetBtn">Reset</button>
-		</div>
+		</div>-->
 	</aside>
 	<main>
 		<svg id="spider"></svg>
