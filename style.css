@@ -3,12 +3,16 @@ height:100%;
 margin:0;
 font-family:sans-serif
 }
-
+body {
+    display: flex;
+    flex-direction: column;
+}
 aside {
 min-width:300px;
 width:300px;
 background:#eee;
-padding:5px
+padding:5px;
+    border-right: 1px solid #ddd;
 }
 
 main {
@@ -40,13 +44,7 @@ white-space:nowrap;
 overflow:hidden
 }
 
-aside>div[label] {
-border:1px solid #0002;
-padding:5px 2px;
-margin:5px 0;
-border-radius:3px;
-background:#fff8
-}
+aside>div[label] {border:1px solid #0002;padding:5px 2px;margin:5px 0;border-radius:3px;background:#fff8;display: none;user-select:none;position: relative;}
 
 aside .flex>label {
 line-height:31.5px;
@@ -69,4 +67,125 @@ border-bottom:1px solid #e5e5e5
 
 input#values,label[for=values] {
 cursor:pointer
+}
+nav {
+    height: 40px;
+    display: flex;
+    background: #176f3a;
+    border-bottom: 1px solid #146032;
+}
+nav>a{
+    line-height: 40px;
+    padding: 0 10px;
+    height: 40px;
+    display: block;
+    color: #ddd;
+    text-decoration: none;
+    font-variant: small-caps;
+    transition: color .5s;
+}
+
+nav>a:hover,nav>a.active {
+    color: #fff;
+}
+
+nav>a.logo {
+    background: url(favicon.ico) center no-repeat;
+    background-size: 70% auto;
+    filter: invert(1) contrast(3.5) saturate(0) brightness(1.2);
+    padding: 0 20px;
+    transition: filter .5s;
+    margin: 0 15px 0 5px;
+}
+
+nav>a.logo:hover{
+    filter: invert(1) contrast(3.5) saturate(0) brightness(2);
+}
+
+.flex>aside input {
+    outline: 0;
+    border: 1px solid #ccc;
+    padding: 3px 5px;
+    border-radius: 4px;
+    transition: border .4s;
+}
+.flex>aside input:hover {
+    border: 1px solid #5ca97a;
+}
+
+.flex>aside input:focus {
+    border: 1px solid #176f3a;
+}
+
+aside[v=diagram]>.diagram,aside[v=theme]>.theme,
+aside[v=view]>.view,aside[v=export]>.export{
+    display: block;
+}
+
+aside .table>div {
+    display: flex;
+    width: 100%;
+}
+
+aside .table>div input,aside #data.table>div a {
+    width: 100%;
+    border: 1px solid #0000;
+    height: 100%;
+    border-radius: 2px;
+    margin: 1px 1px;
+    background: #eee;
+    transition: border .4s, background .4s;
+}
+
+aside .table>div input:first-child {
+    text-align: right;
+}
+
+aside .table>div input:hover {
+    background: #f3f3f3;
+    border-color: #ccc0!important;
+}
+
+aside .table>div input:focus {
+    border-color: #eee!important;
+    background: #f9f9f9;
+}
+
+aside div>a.add {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    padding: 0 3px;
+    text-decoration: none;
+    line-height: 15px;
+    font-size: 19px;
+    color: #555;
+    background: #fff5;
+    border-radius: 5px;
+    transition: color .4s,background .3s;
+}
+
+aside div>a.add:hover {
+    background: #fff;
+    color: #333;
+}
+
+aside #data.table>div a {
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    text-align: center;
+    text-decoration: none;
+    color: #e7c8c8;
+    margin: auto 1px;
+}
+
+aside #data.table>div a:hover {
+    background: #ccc;
+    color: #8f3333;
+}
+
+aside .table>div input:first-child+input {
+    width: 30%;
+    text-align: center;
 }
