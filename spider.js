@@ -15,26 +15,86 @@ const fillColorInput = document.getElementById('fillColor');
 const strokeColorInput = document.getElementById('strokeColor');
 const textColorInput = document.getElementById('textColor');
 const textShadowInput = document.getElementById('textShadow');
+const labelDataTable = document.getElementById('data');
 
 document.querySelectorAll("aside .flex>label").forEach(x=>x.title=x.innerText.slice(0,-1));
 document.querySelectorAll("input").forEach(x=>x.setAttribute("defaultValue",x.value));
 
+String.prototype.hexEncode = function(){
+    var hex, i;
+
+    var result = "";
+    for (i=0; i<this.length; i++) {
+        hex = this.charCodeAt(i).toString(16);
+        result += ("000"+hex).slice(-4);
+    }
+
+    return result
+}
+String.prototype.hexDecode = function(){
+    var j;
+    var hexes = this.match(/.{1,4}/g) || [];
+    var back = "";
+    for(j = 0; j<hexes.length; j++) {
+        back += String.fromCharCode(parseInt(hexes[j], 16));
+    }
+
+    return back;
+}
+
 const formInputs = [titleInput,labelsInput,minValueInput,maxValueInput,fillColorInput,strokeColorInput,textColorInput,textShadowInput],
-hex = ()=>btoa(JSON.stringify(formInputs.map(x=>x.value))),
+hex = ()=>btoa(fflate.strFromU8(fflate.compressSync(fflate.strToU8(JSON.stringify(formInputs.map(x=>x.value)).hexEncode())),true)),
+addLabel = (l,d)=>{
+	var el = document.createElement("div"), i1=document.createElement("input"), i2=document.createElement("input"), a=document.createElement("a");
+		i1.value=l||"";
+		i2.value=d||"";
+		a.href="#";
+		a.innerText="-";
+		a.onclick=e=>{e.preventDefault();if(confirm("are you sure?")) el.remove();parseData()};
+		i1.onchange=i1.onclick=i1.onkeyup=i2.onchange=i2.onclick=i2.onkeyup=parseData;
+		el.append(i1);
+		el.append(i2);
+		el.append(a);
+		labelDataTable.append(el);
+},
 load = hx=>{
-	var h = JSON.parse(atob(hx));
+	var h = JSON.parse(fflate.strFromU8(fflate.decompressSync(fflate.strToU8(atob(hx), true))).hexDecode());
 	if (h.length<4) throw Error("idfk");
 	formInputs.forEach((x,y)=>x.value=h[y]);
+	//console.log(JSON.parse(formInputs[1].value));
+	var table = document.querySelector(".table");
+	table.innerHTML="";
+	JSON.parse(formInputs[1].value).forEach(ar=>{
+		addLabel(ar[0],ar[1]);
+	});
 };
 
+function parseData(){
+    var ins = labelDataTable.querySelectorAll("input"),
+        arr = [];
+    for (var i = 0; i<ins.length;i=i+2){
+        arr.push([ins[i].value,+ins[i+1].value]);
+    }
+    labelsInput.value=JSON.stringify(arr);
+    drawSpiderDiagram();
+    return arr;
+}
 
+var title = "";
+  
 const drawSpiderDiagram = () => {
 	
   history.pushState("","","?d="+hex());
   
-  const title = titleInput.value;
+  title = titleInput.value;
   const values = JSON.parse(labelsInput.value);
   const labels = values.map(z=>z[0]);//labelsInput.value.split(',');
+  
+  var limits = [...new Set(values.map(v=>v[1]))].sort((a,b)=>a-b);
+  console.log(limits[0], limits[limits.length-1]);
+  maxValueInput.setAttribute("min",limits[limits.length-1]);
+  
+  
   const minValue = parseFloat(minValueInput.value);
   const maxValue = parseFloat(maxValueInput.value);
   const fill = fillColorInput.value;
@@ -49,6 +109,7 @@ const drawSpiderDiagram = () => {
   
   var style = document.createElementNS('http://www.w3.org/2000/svg', 'style');
   style.innerHTML = "text{user-select:none;text-anchor:middle;dominant-baseline:middle;font-family:sans-serif;fill:"+textColorInput.value+";"+(textShadow>0?"filter:drop-shadow(0 0 "+textShadow+"px #000);text-shadow:0 0 2px #000;":"")+"}"
+					+ "svg>text{font-size:xx-large}"
 					+"circle{opacity:.3;stroke-width:.5;fill:none;stroke:"+strokeColor+"}circle:first-of-type{fill:"+fill+"}#values>g>circle{opacity:0.7;fill:"+textColorInput.value+";stroke-width:1}"
 					+"polygon{stroke-width:1px;opacity:.7;fill:"+fill+";stroke:"+stroke+"}"
 					+"#values>g>*{cursor:pointer;transition:fill.4s}#values>g:hover>*{fill:"+strokeColor+"}";
@@ -60,12 +121,19 @@ const drawSpiderDiagram = () => {
   const radius = (Math.min(spider.clientWidth, spider.clientHeight) / 2) - 50;
     
   // Calculate the center of the spider diagram
-  const center = { x: spider.clientWidth / 2, y: spider.clientHeight / 2 };
+  const center = { x: spider.clientWidth / 2, y: (spider.clientHeight / 2) + 25 };
   
   // Calculate the angle between each label
   const angleStep = 2 * Math.PI / labels.length;
    
    
+  
+  // Draw the title
+  const titleElem = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  titleElem.setAttribute('x', center.x);
+  titleElem.setAttribute('y', center.y - radius - 50);	
+  titleElem.textContent = title;
+  spider.appendChild(titleElem);
   
   var group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
   group.id="rings";
@@ -78,30 +146,6 @@ const drawSpiderDiagram = () => {
   }
   spider.appendChild(group);
   
-  
-  /*
-  const outerpoly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
-  group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-  group.id="labels";
-  
-  let outerpolyPoints = '';
-  for (let i = 0; i < labels.length; i++) {
-    const angle = angleStep * i - Math.PI / 2;
-    const distance = ((maxValue - minValue) / (maxValue - minValue) * (radius + 10));
-    const point = {
-      x: center.x + distance * Math.cos(angle),
-      y: center.y + distance * Math.sin(angle),
-    };
-    outerpolyPoints += `${point.x},${point.y} `;
-    const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    label.setAttribute('x', point.x);
-    label.setAttribute('y', point.y);
-    label.textContent = labels[i];
-    group.appendChild(label);
-  }
-  spider.appendChild(group);
-  outerpoly.setAttribute('points', outerpolyPoints);
-  */
   
   
   // Draw the polygon
@@ -162,16 +206,6 @@ const drawSpiderDiagram = () => {
   spider.appendChild(group);
   polygon.setAttribute('points', polygonPoints);
   
-  // Draw the title
-  const titleElem = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-  titleElem.setAttribute('x', center.x);
-  titleElem.setAttribute('y', center.y - radius - 35);
-  titleElem.setAttribute('fill', textColor);
-  titleElem.setAttribute('text-anchor', 'middle');
-  titleElem.setAttribute('dominant-baseline', 'middle');
-  titleElem.setAttribute('font-size', '20');
-  titleElem.textContent = title;
-  spider.appendChild(titleElem);
 };
 
 formInputs.forEach(x=>x.onkeyup=x.onchange=x.onclick=x.oninput=drawSpiderDiagram);
@@ -186,7 +220,7 @@ saveBtn.addEventListener('click', ()=>{
   const base64doc = btoa(unescape(encodeURIComponent(svg.outerHTML)));
   const a = document.createElement('a');
   const e = new MouseEvent('click');
-  a.download = (titleInput.value||"spider-diagram")+'.svg';
+  a.download = (title||titleInput.value||"spider-diagram")+'.svg';
   a.href = 'data:image/svg+xml;base64,' + base64doc;
   a.dispatchEvent(e);
 });
@@ -218,12 +252,12 @@ function downloadSVGAsPNG(e){
     context.drawImage(img_to_download,0,0,w,h);
     const dataURL = canvas.toDataURL('image/png');
     if (window.navigator.msSaveBlob) {
-      window.navigator.msSaveBlob(canvas.msToBlob(), "download.png");
+      window.navigator.msSaveBlob(canvas.msToBlob(), (title||titleInput.value||"spider-diagram")+".png");
       e.preventDefault();
     } else {
       const a = document.createElement('a');
       const my_evt = new MouseEvent('click');
-      a.download = 'download.png';
+      a.download = (title||titleInput.value||"spider-diagram")+'.png';
       a.href = dataURL;
       a.dispatchEvent(my_evt);
     }
@@ -233,18 +267,17 @@ function downloadSVGAsPNG(e){
 }
 savePNGBtn.addEventListener('click', downloadSVGAsPNG);
 
-resetBtn.addEventListener('click', () => {if(confirm("are you sure? you will lose everything?"))formInputs.forEach(x=>x.value=x.getAttribute("defaultValue"))});
-/*
-resetBtn.addEventListener('click', () => {
-  titleInput.value = '';
-  labelsInput.value = '';
-  minValueInput.value = '0';
-  maxValueInput.value = '10';
-  fillColorInput.value = '#02b116';
-  strokeColorInput.value = '#70d77c';
-  textColorInput.value = '#000';
-  spider.innerHTML = '';
-});*/
+
+var tit = document.querySelector("#titlebar");
+tit.onclick=e=>{
+	e.preventDefault();
+    var t = e.target, txt = t.innerText, a=document.querySelector("div>aside");
+	if (t.matches(".logo") && confirm("are you sure? you will lose everything?")) location.search="";
+	if (!t.matches("a")||!txt) return;
+    tit.querySelector("#titlebar .active").classList.remove("active");
+    t.classList.add("active");
+    a.setAttribute("v",txt);
+};
 
 ((s,k)=>{
     if (!!s && (k=s.split("#")[0].split("&")[0].split("?d=")[1])){
