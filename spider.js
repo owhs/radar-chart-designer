@@ -1,25 +1,7 @@
-const spider = document.getElementById('spider');
-const titleInput = document.getElementById('title');
-const labelsInput = document.getElementById('values');
-const minValueInput = document.getElementById('minValue');
-const maxValueInput = document.getElementById('maxValue');
-
-const retinaScaleInput = document.getElementById('retinaScale');
-
-const previewBtn = document.getElementById('previewBtn');
-const saveBtn = document.getElementById('saveBtn');
-const savePNGBtn = document.getElementById('savePNGBtn');
-const resetBtn = document.getElementById('resetBtn');
-
-const fillColorInput = document.getElementById('fillColor');
-const strokeColorInput = document.getElementById('strokeColor');
-const textColorInput = document.getElementById('textColor');
-const textShadowInput = document.getElementById('textShadow');
-const labelDataTable = document.getElementById('data');
-
-document.querySelectorAll("aside .flex>label").forEach(x=>x.title=x.innerText.slice(0,-1));
-document.querySelectorAll("input").forEach(x=>x.setAttribute("defaultValue",x.value));
-
+// bits stolen from stack overflow
+function randomIntFromInterval(min, max) { // min and max included 
+  return Math.floor(Math.random() * (max - min + 1) + min)
+}
 String.prototype.hexEncode = function(){
     var hex, i;
 
@@ -41,27 +23,90 @@ String.prototype.hexDecode = function(){
 
     return back;
 }
+function download(filename, text) {
+    var pom = document.createElement('a');
+    pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    pom.setAttribute('download', filename);
 
-const formInputs = [titleInput,labelsInput,minValueInput,maxValueInput,fillColorInput,strokeColorInput,textColorInput,textShadowInput],
-hex = ()=>btoa(fflate.strFromU8(fflate.compressSync(fflate.strToU8(JSON.stringify(formInputs.map(x=>x.value)).hexEncode())),true)),
-addLabel = (l,d)=>{
+    if (document.createEvent) {
+        var event = document.createEvent('MouseEvents');
+        event.initEvent('click', true, true);
+        pom.dispatchEvent(event);
+    }
+    else {
+        pom.click();
+    }
+}
+
+
+// start
+
+
+const spider = document.getElementById('spider');
+const titleInput = document.getElementById('title');
+const labelsInput = document.getElementById('values');
+const minValueInput = document.getElementById('minValue');
+const maxValueInput = document.getElementById('maxValue');
+
+const retinaScaleInput = document.getElementById('retinaScale');
+
+const previewBtn = document.getElementById('previewBtn');
+const saveBtn = document.getElementById('saveBtn');
+const shareBtn = document.getElementById('shareBtn');
+const savePNGBtn = document.getElementById('savePNGBtn');
+
+const saveSpidBtn = document.getElementById('saveSpidBtn');
+const openSpidBtn = document.getElementById('openSpidBtn');
+
+const fillColorInput = document.getElementById('fillColor');
+const strokeColorInput = document.getElementById('strokeColor');
+const ringColorInput = document.getElementById('ringColor');
+const textColorInput = document.getElementById('textColor');
+const highlightColorInput = document.getElementById('highlightColor');
+const shadowColorInput = document.getElementById('shadowColor');
+const textShadowInput = document.getElementById('textShadow');
+const bgColor = document.getElementById('bgColor');
+const noBg = document.getElementById('noBg');
+const noNumbers = document.getElementById('noNumbers');
+
+const darkMode = document.getElementById('darkMode');
+const shareMode = document.getElementById('shareMode');
+
+const labelDataTable = document.getElementById('data');
+
+document.querySelectorAll("aside .flex>label").forEach(x=>x.title=x.title||x.innerText.slice(0,-1));
+document.querySelectorAll("input").forEach(x=>x.setAttribute("defaultValue",x.value));
+
+
+const formInputs = [titleInput,labelsInput,minValueInput,maxValueInput,fillColorInput,strokeColorInput,textColorInput,textShadowInput,highlightColorInput,shadowColorInput,ringColorInput,bgColor,noBg,noNumbers],
+hex = ()=>btoa(fflate.strFromU8(fflate.compressSync(fflate.strToU8(JSON.stringify(formInputs.map(x=>x.matches("[type=checkbox]") ? +x.checked : x.value)).hexEncode())),true)),
+addLabel = (l,d,f)=>{
 	var el = document.createElement("div"), i1=document.createElement("input"), i2=document.createElement("input"), a=document.createElement("a");
 		i1.value=l||"";
 		i2.value=d||"";
+		i2.setAttribute("type","number");
+		i2.setAttribute("min",minValueInput.value);
+		i2.setAttribute("max",maxValueInput.value);
 		a.href="#";
 		a.innerText="-";
-		a.onclick=e=>{e.preventDefault();if(confirm("are you sure?")) el.remove();parseData()};
+		a.onclick=e=>{e.preventDefault();if(confirm("This will remove the label, are you sure?")) el.remove();parseData()};
 		i1.onchange=i1.onclick=i1.onkeyup=i2.onchange=i2.onclick=i2.onkeyup=parseData;
 		el.append(i1);
 		el.append(i2);
 		el.append(a);
 		labelDataTable.append(el);
+		document.querySelector("#titlebar>a+a+a").click();
+		if (f){
+			document.querySelector("#data>div:last-child input").select();
+		}
 },
 load = hx=>{
 	var h = JSON.parse(fflate.strFromU8(fflate.decompressSync(fflate.strToU8(atob(hx), true))).hexDecode());
 	if (h.length<4) throw Error("idfk");
-	formInputs.forEach((x,y)=>x.value=h[y]);
-	//console.log(JSON.parse(formInputs[1].value));
+	formInputs.forEach((x,y)=>{
+		if (!x.matches("[type=checkbox]")) x.value=h[y];
+		else {x[h[y] ? "setAttribute" : "removeAttribute"]("checked","")}
+	});
 	var table = document.querySelector(".table");
 	table.innerHTML="";
 	JSON.parse(formInputs[1].value).forEach(ar=>{
@@ -80,60 +125,72 @@ function parseData(){
     return arr;
 }
 
-var title = "";
-  
+var title = "",
+	radius, center;
+
 const drawSpiderDiagram = () => {
-	
-  history.pushState("","","?d="+hex());
+  var hx = hex();
+  if (shareMode.checked){
+	  history.replaceState("","","?d="+hx);
+  } else history.replaceState("","","?");
+  saveSpidBtn.setAttribute("title", hx.length +" bytes");
   
   title = titleInput.value;
   const values = JSON.parse(labelsInput.value);
-  const labels = values.map(z=>z[0]);//labelsInput.value.split(',');
+  const labels = values.map(z=>z[0]);
   
   var limits = [...new Set(values.map(v=>v[1]))].sort((a,b)=>a-b);
-  console.log(limits[0], limits[limits.length-1]);
   maxValueInput.setAttribute("min",limits[limits.length-1]);
+  minValueInput.setAttribute("max", limits[0]);
   
   
   const minValue = parseFloat(minValueInput.value);
   const maxValue = parseFloat(maxValueInput.value);
   const fill = fillColorInput.value;
   const strokeColor = strokeColorInput.value;
+  const highlightColor = highlightColorInput.value;
+  const shadowColor = shadowColorInput.value;
+  const ringColor = ringColorInput.value;
   const textColor = textColorInput.value;
   const stroke = strokeColorInput.value;
   const textShadow = textShadowInput.value;
-  //const strokeColorInput.value;
 
   // Clear the SVG
   spider.innerHTML = '';
   
   var style = document.createElementNS('http://www.w3.org/2000/svg', 'style');
-  style.innerHTML = "text{user-select:none;text-anchor:middle;dominant-baseline:middle;font-family:sans-serif;fill:"+textColorInput.value+";"+(textShadow>0?"filter:drop-shadow(0 0 "+textShadow+"px #000);text-shadow:0 0 2px #000;":"")+"}"
+  style.innerHTML = "text{user-select:none;text-anchor:middle;dominant-baseline:middle;font-family:sans-serif;fill:"+textColorInput.value+";"+(textShadow>0?"filter:drop-shadow(0 0 "+textShadow+"px "+shadowColor+");text-shadow:0 0 "+(textShadow)+"px "+shadowColor+";":"")+"}"
 					+ "svg>text{font-size:xx-large}"
-					+"circle{opacity:.3;stroke-width:.5;fill:none;stroke:"+strokeColor+"}circle:first-of-type{fill:"+fill+"}#values>g>circle{opacity:0.7;fill:"+textColorInput.value+";stroke-width:1}"
+					+"circle{opacity:.3;stroke-width:.5;fill:none;stroke:"+ringColor+"}circle:first-of-type{fill:"+fill+"}#values>g>circle{opacity:0.7;fill:"+textColorInput.value+";stroke-width:1;stroke:"+stroke+"}"
 					+"polygon{stroke-width:1px;opacity:.7;fill:"+fill+";stroke:"+stroke+"}"
-					+"#values>g>*{cursor:pointer;transition:fill.4s}#values>g:hover>*{fill:"+strokeColor+"}";
+					+"#values>g>*{transition:fill.4s}#values>g:hover>*{fill:"+highlightColor+"}"
+					+ (noBg.checked ? "" : "svg{background:"+bgColor.value+"}");
   spider.appendChild(style);
   
   if (textShadow>0){
   }	  
   // Calculate the radius of the spider diagram
-  const radius = (Math.min(spider.clientWidth, spider.clientHeight) / 2) - 50;
+  radius = (Math.min(spider.clientWidth, spider.clientHeight) / 2) - 50;
     
   // Calculate the center of the spider diagram
-  const center = { x: spider.clientWidth / 2, y: (spider.clientHeight / 2) + 25 };
+  center = { x: spider.clientWidth / 2, y: (spider.clientHeight / 2) + 25 };
   
   // Calculate the angle between each label
   const angleStep = 2 * Math.PI / labels.length;
    
-   
+  //console.log(center, radius);
   
   // Draw the title
   const titleElem = document.createElementNS('http://www.w3.org/2000/svg', 'text');
   titleElem.setAttribute('x', center.x);
   titleElem.setAttribute('y', center.y - radius - 50);	
   titleElem.textContent = title;
+  titleElem.onclick=()=>{
+	  document.querySelector("#titlebar>a+a+a").click();
+	  document.querySelector("#title").focus()
+  };
   spider.appendChild(titleElem);
+  
   
   var group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
   group.id="rings";
@@ -150,10 +207,6 @@ const drawSpiderDiagram = () => {
   
   // Draw the polygon
   const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
-  //polygon.setAttribute('fill', fill);
-  //polygon.setAttribute('stroke', stroke);
-  //polygon.setAttribute('stroke-width', '1');
-  //polygon.setAttribute('opacity', ".7");
   spider.appendChild(polygon);
   let polygonPoints = '';
   group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
@@ -162,7 +215,7 @@ const drawSpiderDiagram = () => {
   for (let i = 0; i < labels.length; i++) {
 	var gr = document.createElementNS('http://www.w3.org/2000/svg', 'g');
     const angle = angleStep * i - Math.PI / 2;
-    const value = values[i][1];//parseFloat(prompt(`Enter value for ${labels[i]}:`));
+    const value = values[i][1];
 	
     var distance = (radius + 10);
     var point = {
@@ -186,7 +239,7 @@ const drawSpiderDiagram = () => {
     var label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
     label.setAttribute('x', point.x);
     label.setAttribute('y', point.y);
-    //label.setAttribute('fill', textColor);
+	
     label.textContent = value;
 	distance = (value - minValue) / (maxValue - minValue) * (radius);
     point = {
@@ -198,8 +251,13 @@ const drawSpiderDiagram = () => {
 	pin.setAttribute('cy', point.y);
 	pin.setAttribute('r', 5);
 	gr.appendChild(pin);
-    gr.appendChild(label);
+    if (noNumbers.checked) gr.appendChild(label);
     gr.appendChild(val);
+	gr.onclick=e=>{
+		var t = e.target, p = t.closest("g"), r = p.parentElement, z = [...r.children].indexOf(p), d = document.querySelectorAll("#data>div")[z].querySelectorAll("input");
+		document.querySelector("#titlebar>a+a+a").click();
+		d[[...p.children].indexOf(t)<2 ? 1 : 0].select();
+	};
 	group.appendChild(gr);
     polygonPoints += `${point.x},${point.y} `;
   }
@@ -210,13 +268,27 @@ const drawSpiderDiagram = () => {
 
 formInputs.forEach(x=>x.onkeyup=x.onchange=x.onclick=x.oninput=drawSpiderDiagram);
 
-//previewBtn.addEventListener('click', drawSpiderDiagram);
+
+minValueInput.addEventListener("change",e=>{
+	document.querySelectorAll("#data input[type=number]").forEach(i=>i.setAttribute("min",minValueInput.value))
+});
+maxValueInput.addEventListener("change",e=>{
+	document.querySelectorAll("#data input[type=number]").forEach(i=>i.setAttribute("max",maxValueInput.value))
+});
+
+
+darkMode.addEventListener("change",e=>{
+	document.querySelector("html").classList[darkMode.checked ? "add" : "remove"]("dark");
+});
+
+window.addEventListener('resize', drawSpiderDiagram, true);
 
 saveBtn.addEventListener('click', ()=>{
   const svg = document.querySelector('svg').cloneNode(1);
   svg.removeAttribute("id");
   svg.setAttribute("version","1.0");
-  svg.setAttribute("xmlns","http://www.w3.org/2000/svg");  
+  svg.setAttribute("xmlns","http://www.w3.org/2000/svg");
+  svg.setAttribute("viewBox", radius + " " + (titleInput.value ? 0 : 50) + " " + (center.x+60) + " " + (center.x+(titleInput.value ? 50 : 0)));
   const base64doc = btoa(unescape(encodeURIComponent(svg.outerHTML)));
   const a = document.createElement('a');
   const e = new MouseEvent('click');
@@ -231,24 +303,21 @@ function downloadSVGAsPNG(e){
   const scale = retinaScaleInput.value || 4;
   
   const canvas = document.createElement("canvas");
-  //document.body.appendChild(canvas);
   const svg = document.querySelector('svg').cloneNode(1);
   svg.removeAttribute("id");
   svg.setAttribute("version","1.0");
   svg.setAttribute("xmlns","http://www.w3.org/2000/svg"); 
+  svg.setAttribute("viewBox", radius + " " + (titleInput.value ? 0 : 50) + " " + (center.x+60) + " " + (center.x+(titleInput.value ? 60 : 0)));
   svg.style.zoom=scale;
   const base64doc = btoa(unescape(encodeURIComponent(svg.outerHTML)));
-  const w = parseInt(document.querySelector('svg').width.baseVal.value * scale);
-  const h = parseInt(document.querySelector('svg').height.baseVal.value * scale);
+  const w = parseInt((center.x+60) * scale);
+  const h = parseInt((center.x+(titleInput.value ? 60 : 0)) * scale);
   const img_to_download = document.createElement('img');
   img_to_download.src = 'data:image/svg+xml;base64,' + base64doc;
-  console.log(w, h);
   img_to_download.onload = function () {
-    console.log('img loaded');
     canvas.setAttribute('width', w);
     canvas.setAttribute('height', h);
     const context = canvas.getContext("2d");
-    //context.clearRect(0, 0, w, h);
     context.drawImage(img_to_download,0,0,w,h);
     const dataURL = canvas.toDataURL('image/png');
     if (window.navigator.msSaveBlob) {
@@ -262,10 +331,29 @@ function downloadSVGAsPNG(e){
       a.dispatchEvent(my_evt);
     }
 	canvas.remove();
-    //canvas.parentNode.removeChild(canvas);
   }  
 }
 savePNGBtn.addEventListener('click', downloadSVGAsPNG);
+
+saveSpidBtn.addEventListener('click', ()=>{
+	download((title||titleInput.value||"spider-diagram")+'.spd',hex());
+});
+
+openSpidBtn.addEventListener('click', ()=>{
+	var input = document.createElement('input');
+	input.type = 'file';
+	input.onchange = e => { 
+	   var file = e.target.files[0]; 
+	   var reader = new FileReader();
+	   reader.readAsText(file,'UTF-8');
+	   reader.onload = readerEvent => {
+		  var content = readerEvent.target.result;
+		  load(content);
+		  parseData();
+	   }
+	}
+	input.click();
+});
 
 
 var tit = document.querySelector("#titlebar");
@@ -278,6 +366,8 @@ tit.onclick=e=>{
     t.classList.add("active");
     a.setAttribute("v",txt);
 };
+
+document.querySelector(".flex>aside>.diagram>.add").onclick=()=>{addLabel("label",Math.round((maxValueInput.value-minValueInput.value)/2),1);parseData()};
 
 ((s,k)=>{
     if (!!s && (k=s.split("#")[0].split("&")[0].split("?d=")[1])){
