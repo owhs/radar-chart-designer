@@ -1,5 +1,5 @@
 # Radar Chart Designer
-## Spider Diagram / Radar Chart Generator Online
+### Spider Diagram / Radar Chart - Online Generator
 
 ----
 
