@@ -1,4 +1,8 @@
-# spider-diagram-designer
+# Radar Chart Designer
+
+A No-Signin Tool to easily create, edit, save and export (SVG & PNG) - HQ Radar Charts / Spider Diagrams
+
+![exported svg](https://github.com/owhs/radar-chart-designer/raw/main/example.svg?raw=true)
 
 
 
