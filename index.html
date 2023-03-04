@@ -1,21 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
   <head>
-    <title>Spider Diagram Designer</title>
+    <title>Radar Chart Designer</title>
     <link href="style.css" rel="stylesheet">
 	<link rel="shortcut icon" href="favicon.ico" /> 
 	<script src="https://unpkg.com/fflate"></script>
   </head>
   <body>
   <nav id="titlebar">
-    <a href="#" class="logo"></a>
-    <a href="#" class="active">diagram</a>
-    <a href="#">theme</a>
-    <a href="#">view</a>
-    <a href="#">export</a>
-  </nav>
+    <a class="logo" title="New Diagram (Blank slate)" accesskey="n"></a>
+    <a class="active" title="File Options" accesskey="1">file</a>
+    <a title="Diagram Details" accesskey="2">diagram</a>
+    <a title="Diagram Theme" accesskey="3">theme</a>
+  </nav><label for="darkMode" accesskey="b"><input type="checkbox" id="darkMode" /></label>
   <div class="flex">
-	<aside v="diagram">
+	<aside v="file">
 		<div label="Diagram Title" class="diagram">
 		  <div class="flex">
 		  <input type="text" id="title" placeholder="title"/>
@@ -32,7 +31,7 @@
 		  </div>
 		</div>
 		<div label="Diagram Data" class="diagram">
-		  <a href="#" class="add">+</a>
+		  <a class="add">+</a>
 		  <input type="hidden" id="values" />
 		  <div class="table" id="data">
 		  
@@ -41,35 +40,71 @@
 		<div label="Diagram Colours" class="theme">
 		  <div class="flex">
 		  <label for="fillColor">Fill Colour:</label>
-		  <input type="color" id="fillColor" value="#02b116" />
+		  <input type="color" id="fillColor" value="#1c8235" />
 		  </div>
 		  <div class="flex">
 		  <label for="strokeColor">Stroke Colour:</label>
-		  <input type="color" id="strokeColor" value="#70d77c" />
+		  <input type="color" id="strokeColor" value="#000000" />
+		  </div>
+		  <div class="flex">
+		  <label for="ringColor">Rings Colour:</label>
+		  <input type="color" id="ringColor" value="#000000" />
+		  </div>
+		  <div class="flex">
+		  <label for="bgColor">Background Colour:</label>
+		  <input type="color" id="bgColor" value="#ffffff" />
+		  </div>
+		  <div class="flex">
+		  <label for="noBg">Transparent Background:</label>
+		  <input type="checkbox" id="noBg" checked />
 		  </div>
 		</div>
-		<div label="Label Colours" class="theme">
+		<div label="Labels" class="theme">
 		  <div class="flex">
 		  <label for="textColor">Text Colour:</label>
-		  <input type="color" id="textColor" value="#000" />
+		  <input type="color" id="textColor" value="#ffffff" />
+		  </div>
+		  <div class="flex" title="svg only">
+		  <label for="highlightColor">Highlight Colour:</label>
+		  <input type="color" id="highlightColor" value="#ffff00" />
+		  </div>
+		  <div class="flex">
+		  <label for="shadowColor">Shadow Colour:</label>
+		  <input type="color" id="shadowColor" value="#000000" />
 		  </div>
 		  <div class="flex">
 		  <label for="textShadow">Shadow Size:</label>
 		  <input type="number" id="textShadow" value="1" />
 		  </div>
-		</div>
-		<div label="Export Settings" class="export">
 		  <div class="flex">
-		  <label for="retinaScale">Retina Scale:</label>
-		  <input type="number" id="retinaScale" value="4" max="8" min="1" />
+		  <label for="noNumbers">Show Numbers:</label>
+		  <input type="checkbox" id="noNumbers" checked />
 		  </div>
+		</div>
+		<div label="File Save" class="file">
+		  <center>
+		  <button id="saveSpidBtn">Save Diagram</button>
+		  <button id="openSpidBtn">Open Diagram</button>
+		</div>		
+		<div label="URL Share" class="file">
+			<div class="flex">
+		  <label for="shareMode">Live URL:</label>
+		  <input type="checkbox" id="shareMode" checked onchange="drawSpiderDiagram()" />
+		  </div>
+		</div>		
+		
+		<div label="SVG Export" class="file">
 		  <center>
 		  <button id="saveBtn">Save SVG</button>
+		</div>
+		<div label="PNG Export Settings" class="file">
+		  <div class="flex">
+		  <label for="retinaScale">Retina Scale:</label>
+		  <input type="number" id="retinaScale" value="4" max="10" min="1" />
+		  </div>
+		  <center>
 		  <button id="savePNGBtn">Save PNG</button>
 		</div>
-		<!--<div>
-		  <button id="resetBtn">Reset</button>
-		</div>-->
 	</aside>
 	<main>
 		<svg id="spider"></svg>
