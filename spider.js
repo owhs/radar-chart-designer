@@ -342,6 +342,7 @@ saveSpidBtn.addEventListener('click', ()=>{
 openSpidBtn.addEventListener('click', ()=>{
 	var input = document.createElement('input');
 	input.type = 'file';
+	input.setAttribute("accept",".spd");
 	input.onchange = e => { 
 	   var file = e.target.files[0]; 
 	   var reader = new FileReader();
