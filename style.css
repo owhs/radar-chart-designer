@@ -73,12 +73,13 @@ nav>a{
     color: #ddd;
     text-decoration: none;
     font-variant: small-caps;
-    transition: color .3s,box-shadow 2s;
+    transition: color .3s,box-shadow .3s,background .3s;
 }
 
 nav>a:hover,nav>a.active {
     color: #fff;
-    box-shadow: 0 1px 0 #18ff00;
+    box-shadow: 0 1px 0 #12bc55;
+    background: #fff1;
 }
 
 nav>a.logo {
@@ -426,4 +427,3 @@ html.dark aside #data.table > div a:hover {
     background-color: rgb(52, 56, 58);
     color: rgb(204, 116, 116);
 }
-
