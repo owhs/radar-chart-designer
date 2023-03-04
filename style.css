@@ -1,191 +1,193 @@
-html,body {
-height:100%;
-margin:0;
-font-family:sans-serif
+
 }
-body {
-    display: flex;
-    flex-direction: column;
-}
-aside {
-min-width:300px;
-width:300px;
-background:#eee;
-padding:5px;
-    border-right: 1px solid #ddd;
+body>nav+label>input {display:none}
+
+
+aside:after {
+    content: "Radar Chart Designer - v0.4 - by owhs";
+    font-size: 11px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 20px;
+    background: #0002;
+    line-height: 20px;
+    text-align: center;
+    color: #000;
+    opacity: .6;
+    pointer-events: none;
 }
 
-main {
-width:100%;
-padding:10px;
-background-image:linear-gradient(45deg,#0001 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#0001 75%),linear-gradient(45deg,transparent 75%,#0001 75%),linear-gradient(45deg,#0001 25%,transparent 25%);
-background-size:20px 20px;
-background-position:0 0,0 0,-50px -50px,50px 50px
+
+.flex>aside .flex>input:not(:only-child) {
+    max-width: 100px;
+    min-width: 100px;
+    width: 100px;
 }
 
-#spider {
-width:100%;
-height:100%
+.flex>aside .flex>input[type=number] {
+    max-width: 88px;
+    min-width: 88px;
+    width: 88px;
 }
 
-input {
-margin:5px
-}
+/* dark */
 
-.flex {
-display:flex;
-height:100%
-}
-
-aside .flex>* {
-width:100%;
-text-overflow:ellipsis;
-white-space:nowrap;
-overflow:hidden
-}
-
-aside>div[label] {border:1px solid #0002;padding:5px 2px;margin:5px 0;border-radius:3px;background:#fff8;display: none;user-select:none;position: relative;}
-
-aside .flex>label {
-line-height:31.5px;
-text-align:right;
-padding-right:5px;
-max-width:105px;
-font-variant-caps:all-small-caps;
-font-size:14px
-}
-
-aside>div[label]:before {
-content:attr(label);
-font-size:12px;
-font-variant-caps:all-small-caps;
-color:#888;
-text-align:center;
-display:block;
-border-bottom:1px solid #e5e5e5
-}
-
-input#values,label[for=values] {
-cursor:pointer
-}
-nav {
-    height: 40px;
-    display: flex;
-    background: #176f3a;
-    border-bottom: 1px solid #146032;
-}
-nav>a{
-    line-height: 40px;
-    padding: 0 10px;
-    height: 40px;
-    display: block;
-    color: #ddd;
-    text-decoration: none;
-    font-variant: small-caps;
-    transition: color .5s;
-}
-
-nav>a:hover,nav>a.active {
+html.dark aside:after {
     color: #fff;
 }
-
-nav>a.logo {
-    background: url(favicon.ico) center no-repeat;
-    background-size: 70% auto;
-    filter: invert(1) contrast(3.5) saturate(0) brightness(1.2);
-    padding: 0 20px;
-    transition: filter .5s;
-    margin: 0 15px 0 5px;
+html.dark {
+    background-color: #181a1b !important;
+}
+html.dark {
+    color-scheme: dark !important;
+}
+html.dark, html.dark body, html.dark input, html.dark textarea, html.dark select, html.dark button, html.dark dialog {
+    background-color: #181a1b;
+}
+html.dark, html.dark body, html.dark input, html.dark textarea, html.dark select, html.dark button {
+    border-color: #726a5d;
+    color: #e6e4e1;
+}
+html.dark a {
+    color: #3290fc;
+}
+html.dark table {
+    border-color: #535a5d;
+}
+html.dark ::placeholder {
+    color: #b0a99f;
+}
+html.dark input:-webkit-autofill,
+html.dark textarea:-webkit-autofill,
+html.dark select:-webkit-autofill {
+    background-color: #3f4300 !important;
+    color: #e6e4e1 !important;
+}
+html.dark ::-webkit-scrollbar {
+    background-color: #202324;
+    color: #a9a297;
+}
+html.dark ::-webkit-scrollbar-thumb {
+    background-color: #44494c;
+}
+html.dark ::-webkit-scrollbar-thumb:hover {
+    background-color: #565d61;
+}
+html.dark ::-webkit-scrollbar-thumb:active {
+    background-color: #474d50;
+}
+html.dark ::-webkit-scrollbar-corner {
+    background-color: #181a1b;
+}
+html.dark ::selection {
+    background-color: #004ca8 !important;
+    color: #e6e4e1 !important;
+}
+html.dark ::-moz-selection {
+    background-color: #004ca8 !important;
+    color: #e6e4e1 !important;
+}
+/*
+html.dark .jfk-bubble.gtx-bubble, .captcheck_answer_label > input + img, span#closed_text > img[src^="https://www.gstatic.com/images/branding/googlelogo"], span[data-href^="https://www.hcaptcha.com/"] > #icon, #bit-notification-bar-iframe, ::-webkit-calendar-picker-indicator, div[role="dialog"] div[role="document"], div[role="dialog"] div[role="document"], div[role="dialog"] div[role="document"], div[role="dialog"] div[role="document"], div[role="dialog"] div[role="document"], div[role="dialog"] div[role="document"], div[role="dialog"] div[role="document"], div[role="dialog"] div[role="document"], div[role="dialog"] div[role="document"], div[role="dialog"] div[role="document"], div[role="dialog"] div[role="document"], div[role="dialog"] div[role="document"], div[role="dialog"] div[role="document"], div[role="dialog"] div[role="document"], div[role="dialog"] div[role="document"], div[role="dialog"] div[role="document"], div[role="dialog"] div[role="document"], div[role="dialog"] div[role="document"], div[role="dialog"] div[role="document"] {
+    filter: invert(100%) hue-rotate(180deg) brightness(99%) contrast(90%) !important;
+}*/
+:root {
+   --darkreader-neutral-background: #131516;
+   --darkreader-neutral-text: #d6d2cd;
+   --darkreader-selection-background: #004ca8;
+   --darkreader-selection-text: #e6e4e1;
+}
+html.dark aside {
+    background-image: initial;
+    background-color: rgb(34, 36, 38);
+    border-right-color: rgb(57, 61, 64);
+}
+html.dark main {
+    background-image: linear-gradient(45deg,
+    rgba(0, 0, 0, 0.07) 25%,
+    rgba(0, 0, 0, 0) 25%),
+    linear-gradient(45deg,
+    rgba(0, 0, 0, 0) 75%,
+    rgba(0, 0, 0, 0.07) 75%),
+    linear-gradient(45deg,
+    rgba(0, 0, 0, 0) 75%,
+    rgba(0, 0, 0, 0.07) 75%),
+    linear-gradient(45deg,
+    rgba(0, 0, 0, 0.07) 25%,
+    rgba(0, 0, 0, 0) 25%);
+}
+html.dark aside > div[label] {
+    border-color: rgba(139, 129, 114, 0.13);
+    background-image: initial;
+    background-color: rgba(24, 26, 27, 0.53);
+}
+html.dark aside > div[label]::before {
+    color: rgb(155, 147, 135);
+    border-bottom-color: rgb(54, 59, 61);
+}
+html.dark nav {
+    background-image: initial;
+    background-color: rgb(18, 88, 46);
+    border-bottom-color: rgb(38, 180, 94);
+}
+html.dark nav > a {
+    color: rgb(209, 205, 199);
+    text-decoration-color: initial;
+}
+html.dark nav > a:hover,
+html.dark nav > a.active {
+    color: rgb(230, 228, 225);
+}
+html.dark nav > a.logo {
+    background-image: url("favicon.ico");
+    background-color: initial;
+}
+html.dark .flex > aside input {
+    outline-color: initial;
+    border-color: rgb(61, 67, 69);
+}
+html.dark .flex > aside input:hover {
+    border-color: rgb(60, 115, 81);
+}
+html.dark .flex > aside input:focus {
+    border-color: rgb(37, 176, 92);
+}
+html.dark aside .table > div input,
+html.dark aside #data.table > div a {
+    border-color: rgba(139, 129, 114, 0);
+    background-image: initial;
+    background-color: rgb(34, 36, 38);
+}
+html.dark aside .table > div input:hover {
+    background-image: initial;
+    background-color: rgb(31, 33, 35);
+    border-color: rgba(61, 67, 69, 0) !important;
+}
+html.dark aside .table > div input:focus {
+    background-image: initial;
+    background-color: rgb(27, 30, 31);
+    border-color: rgb(52, 56, 58) !important;
+}
+html.dark aside div > a.add {
+    text-decoration-color: initial;
+    color: rgb(176, 170, 160);
+    background-image: initial;
+    background-color: rgba(24, 26, 27, 0.33);
+}
+html.dark aside div > a.add:hover {
+    background-image: initial;
+    background-color: rgb(24, 26, 27);
+    color: rgb(198, 193, 186);
+}
+html.dark aside #data.table > div a {
+    text-decoration-color: initial;
+    color: rgb(221, 179, 179);
+}
+html.dark aside #data.table > div a:hover {
+    background-image: initial;
+    background-color: rgb(52, 56, 58);
+    color: rgb(204, 116, 116);
 }
 
-nav>a.logo:hover{
-    filter: invert(1) contrast(3.5) saturate(0) brightness(2);
-}
-
-.flex>aside input {
-    outline: 0;
-    border: 1px solid #ccc;
-    padding: 3px 5px;
-    border-radius: 4px;
-    transition: border .4s;
-}
-.flex>aside input:hover {
-    border: 1px solid #5ca97a;
-}
-
-.flex>aside input:focus {
-    border: 1px solid #176f3a;
-}
-
-aside[v=diagram]>.diagram,aside[v=theme]>.theme,
-aside[v=view]>.view,aside[v=export]>.export{
-    display: block;
-}
-
-aside .table>div {
-    display: flex;
-    width: 100%;
-}
-
-aside .table>div input,aside #data.table>div a {
-    width: 100%;
-    border: 1px solid #0000;
-    height: 100%;
-    border-radius: 2px;
-    margin: 1px 1px;
-    background: #eee;
-    transition: border .4s, background .4s;
-}
-
-aside .table>div input:first-child {
-    text-align: right;
-}
-
-aside .table>div input:hover {
-    background: #f3f3f3;
-    border-color: #ccc0!important;
-}
-
-aside .table>div input:focus {
-    border-color: #eee!important;
-    background: #f9f9f9;
-}
-
-aside div>a.add {
-    position: absolute;
-    top: 2px;
-    right: 2px;
-    padding: 0 3px;
-    text-decoration: none;
-    line-height: 15px;
-    font-size: 19px;
-    color: #555;
-    background: #fff5;
-    border-radius: 5px;
-    transition: color .4s,background .3s;
-}
-
-aside div>a.add:hover {
-    background: #fff;
-    color: #333;
-}
-
-aside #data.table>div a {
-    width: 20px;
-    height: 20px;
-    min-width: 20px;
-    text-align: center;
-    text-decoration: none;
-    color: #e7c8c8;
-    margin: auto 1px;
-}
-
-aside #data.table>div a:hover {
-    background: #ccc;
-    color: #8f3333;
-}
-
-aside .table>div input:first-child+input {
-    width: 30%;
-    text-align: center;
-}
