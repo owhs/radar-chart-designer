@@ -1,3 +1,23 @@
+
+* {
+scrollbar-width: auto;
+scrollbar-color: #176f3a #ffffff;
+}
+
+*::-webkit-scrollbar {
+width: 8px;
+}
+
+*::-webkit-scrollbar-track {
+background: #0001;
+}
+
+*::-webkit-scrollbar-thumb {
+background-color: #176f3a;
+border-radius: 10px;
+border: 0;
+}
+  
 html,body {
 height:100%;
 margin:0;
@@ -149,19 +169,21 @@ aside div>a.add {
     right: 2px;
     float: right;
     margin-top: -17px;
-    padding: 0 3px;
+    padding: 0;
     text-decoration: none;
     line-height: 15px;
+    width: 15px;
     font-size: 19px;
-    color: #555;
-    background: #fff5;
-    border-radius: 5px;
+    text-align: center;
+    color: #dedede;
+    background: #22894b;
+    border-radius: 3px;
     transition: color .4s,background .3s;
 }
 
 aside div>a.add:hover {
-    background: #fff;
-    color: #333;
+    background: #176f3a;
+    color: #fff;
 }
 
 aside #data.table>div a {
@@ -244,13 +266,17 @@ aside:after {
     line-height: 20px;
     text-align: center;
     color: #000;
-    opacity: .6;
+    opacity: .2;
     pointer-events: none;
-	transition: opacity .3s
+	transition: opacity .5s
 }
 
 aside:hover:after {
     opacity: 0;
+}
+
+nav:hover~.flex>aside:after {
+    opacity: .6;
 }
 
 .flex>aside .flex>input:not(:only-child) {
@@ -298,22 +324,6 @@ html.dark select:-webkit-autofill {
     background-color: #3f4300 !important;
     color: #e6e4e1 !important;
 }
-html.dark ::-webkit-scrollbar {
-    background-color: #202324;
-    color: #a9a297;
-}
-html.dark ::-webkit-scrollbar-thumb {
-    background-color: #44494c;
-}
-html.dark ::-webkit-scrollbar-thumb:hover {
-    background-color: #565d61;
-}
-html.dark ::-webkit-scrollbar-thumb:active {
-    background-color: #474d50;
-}
-html.dark ::-webkit-scrollbar-corner {
-    background-color: #181a1b;
-}
 html.dark ::selection {
     background-color: #004ca8 !important;
     color: #e6e4e1 !important;
@@ -322,10 +332,6 @@ html.dark ::-moz-selection {
     background-color: #004ca8 !important;
     color: #e6e4e1 !important;
 }
-/*
-html.dark .jfk-bubble.gtx-bubble, .captcheck_answer_label > input + img, span#closed_text > img[src^="https://www.gstatic.com/images/branding/googlelogo"], span[data-href^="https://www.hcaptcha.com/"] > #icon, #bit-notification-bar-iframe, ::-webkit-calendar-picker-indicator, div[role="dialog"] div[role="document"], div[role="dialog"] div[role="document"], div[role="dialog"] div[role="document"], div[role="dialog"] div[role="document"], div[role="dialog"] div[role="document"], div[role="dialog"] div[role="document"], div[role="dialog"] div[role="document"], div[role="dialog"] div[role="document"], div[role="dialog"] div[role="document"], div[role="dialog"] div[role="document"], div[role="dialog"] div[role="document"], div[role="dialog"] div[role="document"], div[role="dialog"] div[role="document"], div[role="dialog"] div[role="document"], div[role="dialog"] div[role="document"], div[role="dialog"] div[role="document"], div[role="dialog"] div[role="document"], div[role="dialog"] div[role="document"], div[role="dialog"] div[role="document"] {
-    filter: invert(100%) hue-rotate(180deg) brightness(99%) contrast(90%) !important;
-}*/
 :root {
    --darkreader-neutral-background: #131516;
    --darkreader-neutral-text: #d6d2cd;
@@ -359,6 +365,7 @@ html.dark aside > div[label] {
 html.dark aside > div[label]::before {
     color: rgb(155, 147, 135);
     border-bottom-color: rgb(54, 59, 61);
+    background-color: rgb(25 27 28);
 }
 html.dark nav {
     background-image: initial;
@@ -402,17 +409,6 @@ html.dark aside .table > div input:focus {
     background-image: initial;
     background-color: rgb(27, 30, 31);
     border-color: rgb(52, 56, 58) !important;
-}
-html.dark aside div > a.add {
-    text-decoration-color: initial;
-    color: rgb(176, 170, 160);
-    background-image: initial;
-    background-color: rgba(24, 26, 27, 0.33);
-}
-html.dark aside div > a.add:hover {
-    background-image: initial;
-    background-color: rgb(24, 26, 27);
-    color: rgb(198, 193, 186);
 }
 html.dark aside #data.table > div a {
     text-decoration-color: initial;
