@@ -5,6 +5,7 @@
 
 A No-Signin, No-Cookie Tool -
 
+Autosaves progress in a unique url.
 Designed to easily create, edit, save and export (SVG & PNG) - HQ Radar Charts / Spider Diagrams
 
 ----
